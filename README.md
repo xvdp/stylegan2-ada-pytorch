@@ -1,3 +1,12 @@
+## Mod of StyleGAN2-ADA using mediapipe to detect eyes and mouth that drive projection heurstics @xvdp
+**Modified files: x_<>**
+* x_align_face.py       simplified code snippets from ffhq  repository and port to [mediapipe](https://google.github.io/mediapipe/)
+* x_projector.py        extension of projector with optional saving and loading of model, image, video, npz
+* x_project_w_mediapipe.py  jupyter notebook
+* x_project_w_mediapipe_collab.py  collab jupyter notebook (wip) currently failing on cuda compilation
+
+### [PROJECTING_FACES](PROJECTING_FACES.md) for modification info
+
 ## StyleGAN2-ADA &mdash; Official PyTorch implementation
 
 ![Teaser image](./docs/stylegan2-ada-teaser-1024x252.png)
@@ -113,6 +122,8 @@ python legacy.py \
 ```
 
 ## Projecting images to latent space
+
+### [PROJECTING_FACES](PROJECTING_FACES.md) for modification info
 
 To find the matching latent vector for a given image file, run:
 

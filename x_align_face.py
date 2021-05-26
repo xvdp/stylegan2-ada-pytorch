@@ -4,10 +4,6 @@ requires media-pipe and dlib
 port from dlib to mediapipe for ffqh alightment - its faster
 this does not use all of media pipe's data - 3d could be leveraged
 
-face detect using dlib
-https://colab.research.google.com/drive/1IRfjB5Mex-2juIH6-Q6DYK8YNOzbp-pC#scrollTo=yZh_6ec36lnu
-
-
 install mediapipe
 https://google.github.io/mediapipe/getting_started/install.html
 or just pip install mediapipe
@@ -248,6 +244,7 @@ def ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enab
     img = get_image(img, as_np=False)
     if landmarks is None:
         landmarks = mp_landmarks(img)
+        media_pipe = True
 
     # only eyes and mouth are used to align
     if not media_pipe:  # use dlib
