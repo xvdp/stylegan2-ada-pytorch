@@ -82,5 +82,7 @@ Generator, outputs = x_projector.mp_project(Generator, image)
         outdir      str output dir to save [None], if not none, save outputs to dir
         out_name    str "" optional suffix to saved filennames
     """
-
 ```
+## TensorFlow Graph ( StyleGAN2 )
+Generated with `x_stylegan2_tensorboard_collab.ipynb`
+![Training curves](./docs/stylegan2_graph.png)
