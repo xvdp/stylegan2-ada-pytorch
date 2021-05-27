@@ -1,14 +1,19 @@
 # Projecting Faces Mod (@xvdp) with [MEDIAPIPE](https://google.github.io/mediapipe/)
 <br>
+Projection of images from the wild onto stylegan2-ada, notebooks, modified files.
 
 ## Possible failure points
 
 ***This mod was NOT tested thoroughly, it likely contains loose ends** <br><br>
-***StyleGAN2 may fail if CUDA and CUDNN are not properly installed, legacy of the original repository runtime compiles .cu files**
+***Running on local GPU, StyleGAN2 may fail if CUDA and CUDNN are not properly installed, on runtime compile of .cpp .cu files**
 <br>
-## Requires:
-`pip install mediapipe` <br>
-In order to project faces competently, eyes and mouth need to be aligned with a similarity transform. <br>
+## Local installation Requires:
+`mediapipe` <br>
+`ninja` <br>
+`torch >= 1.7` <br>
+
+
+In order to project faces with StyleGAN, eyes and mouth need to be aligned with a similarity transform. <br>
 As mentioned on the [README](README.md), "image should be cropped and aligned similar to the [FFHQ dataset](https://github.com/NVlabs/ffhq-dataset)"<br><br>
 FFHQ alignment process is a simple, yet necessary, heuristic that involves, [DLIB](http://dlib.net) 68 landmarks pretrained front face detector, using eyes and mouth, scales, rotates and crops image to a default size of 1024x1024.This mod is done with the purpose of simplifying and serializing the process. <br><br>
 Projection core code was not modified in this mod, it can be read inside `x_projector.py project()` is an inverse fitting of the generator using VGG16 pretrained model features.
@@ -29,10 +34,14 @@ proj_img = outputs["image"]
 Generator, outputs = x_projector.mp_project(Generator, image)
 ```
 ## Files
+### jupyter notebooks
 `x_project_w_mediapipe.ipynb`: example code of projection from the wild 
-<br>
-`x_align_faces.py`:   contains mediapipe as well as simplified DLIB code is ported from FFHQ project, single command w
+### collab notebooks
+`x_project_w_mediapipe_collab.ipynb`: similar to above, as collab <br>
+`x_stylegan2_tensorboard_collab.ipynb`: tensorboard stylegan graph collab
 
+<br>
+`x_align_faces.py`:   contains mediapipe as well as simplified DLIB code is ported from FFHQ project
 
 ```python
     ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enable_padding=True, media_pipe=True)
