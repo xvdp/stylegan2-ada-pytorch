@@ -26,7 +26,7 @@ import mediapipe as mp
 import collections
 
 import numpy as np
-import scipy
+from scipy import ndimage
 from PIL import Image
 import matplotlib.pyplot as plt
 
@@ -205,17 +205,20 @@ def mp_landmarks(image):
 def dlib_landmarks(image, predictor_folder="."):
     """ run dlib to extract 68 face landmarks
     """
-    assert _DLIB, "Cannot run dlib landmarks, install dlib first"
+    assert _DLIB, "Cannot run dlib landmarks, run:\t\n$ pip install dlib"
 
     _path = 'shape_predictor_68_face_landmarks.dat'
     _path = osp.join(osp.abspath(osp.expanduser(predictor_folder)), _path)
     if not osp.isfile(_path):
-        _url = 'http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2'
-        _msg = "dlib 68 landmark file <{}> not found, wget {} and unzip or pass folder"
-        assert osp.isfile(_path), _msg.format(_path, _url)
+        _bz = "shape_predictor_68_face_landmarks.dat.bz2"
+        _url = 'http://dlib.net/files/{}'.format(_bz)
+        _msg = "dlib 68 landmark file <{}> not found, run\n\t$ wget {}\t\n$ bzip2 -d {}"
+        assert osp.isfile(_path), _msg.format(_path, _url, _bz)
 
     detector = dlib.get_frontal_face_detector()
     shape_predictor = dlib.shape_predictor(_path)
+
+    image = get_image(image, as_np=True)
 
     dets = detector(image, 1)
     out = []
@@ -223,6 +226,8 @@ def dlib_landmarks(image, predictor_folder="."):
         shape = shape_predictor(image, d)
         for e in shape.parts():
             out.append([e.x, e.y])
+    if not out:
+        return None
     return np.asarray(out)
 
 ##
@@ -243,7 +248,18 @@ def ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enab
     """
     img = get_image(img, as_np=False)
     if landmarks is None:
-        landmarks = mp_landmarks(img)
+        if media_pipe:
+            landmarks = mp_landmarks(img)
+        else:
+            landmarks = dlib_landmarks(img)
+    if landmarks is None:
+        return landmarks
+
+    if len(landmarks) == 68 and media_pipe:
+        print("Switching to dlib detector ")
+        media_pipe = False
+    elif len(landmarks) == 486 and not media_pipe:
+        print("Switching to mediapipe detector ")
         media_pipe = True
 
     # only eyes and mouth are used to align
@@ -312,7 +328,7 @@ def ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enab
         y, x, _ = np.ogrid[:h, :w, :1]
         mask = np.maximum(1.0 - np.minimum(np.float32(x) / pad[0], np.float32(w-1-x) / pad[2]), 1.0 - np.minimum(np.float32(y) / pad[1], np.float32(h-1-y) / pad[3]))
         blur = qsize * 0.02
-        img += (scipy.ndimage.gaussian_filter(img, [blur, blur, 0]) - img) * np.clip(mask * 3.0 + 1.0, 0.0, 1.0)
+        img += (ndimage.gaussian_filter(img, [blur, blur, 0]) - img) * np.clip(mask * 3.0 + 1.0, 0.0, 1.0)
         img += (np.median(img, axis=(0,1)) - img) * np.clip(mask, 0.0, 1.0)
         img = Image.fromarray(np.uint8(np.clip(np.rint(img), 0, 255)), 'RGB')
         quad += pad[:2]
@@ -323,3 +339,9 @@ def ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enab
         img = img.resize((output_size, output_size), Image.ANTIALIAS)
     
     return img
+
+"""
+b = BytesIO()
+img2.save(b,format="jpeg")
+img3 = Image.open(b)
+"""
