@@ -4,8 +4,8 @@ Projection of images from the wild onto stylegan2-ada, notebooks, modified files
 
 ## Possible failure points
 
-***This mod was NOT tested thoroughly, it likely contains loose ends** <br><br>
-***Running on local GPU, StyleGAN2 may fail if CUDA and CUDNN are not properly installed, on runtime compile of .cpp .cu files**
+   **This mod was NOT tested thoroughly, it likely contains loose ends** <br>
+   **StyleGAN2 may fail on local installation if CUDA and CUDNN are not properly installed: depot requires runtime compile of .cpp .cu files**
 <br>
 ## Local installation Requires:
 `mediapipe` <br>
@@ -35,7 +35,7 @@ Generator, outputs = x_projector.mp_project(Generator, image)
 ```
 ## Files
 ### jupyter notebooks
-`x_project_w_mediapipe.ipynb`: example code of projection from the wild 
+`x_project_w_mediapipe.ipynb`: example code of projection from the wild intended tob e run locally.
 ### collab notebooks
 `x_project_w_mediapipe_collab.ipynb`: similar to above, as collab <br>
 `x_stylegan2_tensorboard_collab.ipynb`: tensorboard stylegan graph collab
@@ -44,7 +44,7 @@ Generator, outputs = x_projector.mp_project(Generator, image)
 `x_align_faces.py`:   contains mediapipe as well as simplified DLIB code is ported from FFHQ project
 
 ```python
-    ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enable_padding=True, media_pipe=True)
+ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enable_padding=True, media_pipe=True)
     """output: rotated scaled cropped PIL Image
     Args:
         img         ndarray image | pil image | image path | image url
@@ -54,12 +54,12 @@ Generator, outputs = x_projector.mp_project(Generator, image)
         --other args ported from ffhq download file
     """
 
-    landmarks = mp_landmarks(image)
+landmarks = mp_landmarks(image)
     """output: 2d ndarray of 486 landmarks
     Args
         image    ndarray image | pil image | file path | file url
     """
-    landmarks = dlib_landmarks(image, predictor_folder)
+landmarks = dlib_landmarks(image, predictor_folder)
     """output: 2d ndarray of 68 landmarks
     Args
       image               file path
