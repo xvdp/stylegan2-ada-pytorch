@@ -45,7 +45,7 @@ Generator, outputs = x_projector.mp_project(Generator, image)
 
 ```python
 ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enable_padding=True, media_pipe=True)
-    """output: rotated scaled cropped PIL Image
+    """output: PIL Image, rotated scaled cropped
     Args:
         img         ndarray image | pil image | image path | image url
     Args optional:
@@ -54,12 +54,12 @@ ffhq_align(img, landmarks=None,  output_size=1024, transform_size=4096, enable_p
         --other args ported from ffhq download file
     """
 
-landmarks = mp_landmarks(image)
+mp_landmarks(image)
     """output: 2d ndarray of 486 landmarks
     Args
         image    ndarray image | pil image | file path | file url
     """
-landmarks = dlib_landmarks(image, predictor_folder)
+dlib_landmarks(image, predictor_folder)
     """output: 2d ndarray of 68 landmarks
     Args
       image               file path
@@ -68,7 +68,7 @@ landmarks = dlib_landmarks(image, predictor_folder)
 ```
 `x_projector.py`:   mod of `projector.py` making loading and saving files optional
 ```python
-    mp_project(network, img, seed=303, num_steps=100, device="cuda", outputs=None, outdir=None, out_name="")
+mp_project(network, img, seed=303, num_steps=100, device="cuda", outputs=None, outdir=None, out_name="")
     """ ouput: tuple (G, out)
             G       Generator nn.Module
             out     dict of requested outputs default ["image"]
@@ -85,4 +85,8 @@ landmarks = dlib_landmarks(image, predictor_folder)
 ```
 ## TensorFlow Graph ( StyleGAN2 )
 Generated with `x_stylegan2_tensorboard_collab.ipynb`
-![Training curves](./docs/stylegan2_graph.png)
+![Graph](./docs/stylegan2_graph.png)
+### Expanded Generator Nodes
+
+
+![](./docs/Nodes.png) 
